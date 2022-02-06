@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Blockly logic gates</title>
+  <script src="../blockly_compressed.js"></script>
+  <script src="../blocks_compressed.js"></script>
+  <script src="../javascript_compressed.js"></script>
+  <script src="../msg/js/en.js"></script>
+  
+  <script src="customBlocks.js"></script>
+  <style>
+    body {
+      background-color: #fff;
+      font-family: sans-serif;
+    }
+    h1 {
+      font-weight: normal;
+      font-size: 140%;
+    }
+        .diode{
+        height: 50px;
+        width: 50px;
+        border-radius: 50%;
+        background-color: white;
+        border: solid 1px black;
+        position: absolute;
+        top:110px;
+    }
+    .text{
+        height: 15px;
+        width: 50px;
+        position: absolute;
+        top:170px;
+        text-align: center
+    }
+  </style>
+</head>
+    <body>
+          <p>
+    <button onclick="showCode()">Show JavaScript</button>
+    <button onclick="runCode()">Run JavaScript</button>
+  </p>
+
+  <div id="blocklyDiv" style="height: 600px; width: 800px;"></div>
+  
+  <xml id="toolbox" style="display: none">
+  <category name="Logic gates" colour="#abcdef">
+    <block type="and"></block>
+    <block type="nand"></block>
+    <block type="or"></block>
+    <block type="nor"></block>
+    <block type="xor"></block>
+    <block type="xnor"></block>
+    <block type="not"></block>
+  </category>
+  <category name="Output" colour="#fedcba">
+    <block type="led">
+      <field name="NAME">#ff0000</field>
+    </block>
+  </category>
+  <category name="Values" colour="#abfedc">
+    <block type="boolean">
+      <field name="boolean">TRUE</field>
+    </block>
+  </category>
+      <category name="Variables" colour="%{BKY_VARIABLES_HUE}" custom="VARIABLE"></category>
+</xml>
+    <script>
+    var workspace = Blockly.inject('blocklyDiv',
+        {media: '../media/',
+         toolbox: document.getElementById('toolbox')});
+    Blockly.Xml.domToWorkspace(document.getElementById('startBlocks'),
+                               workspace);
+
+    function showCode() {
+      // Generate JavaScript code and display it.
+      Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+      var code = Blockly.JavaScript.workspaceToCode(workspace);
+      alert(code);
+    }
+
+    function runCode() {
+      // Generate JavaScript code and run it.
+      
+      removeElementsByClass("diode");
+      removeElementsByClass("text");
+      
+      window.LoopTrap = 1000;
+      Blockly.JavaScript.INFINITE_LOOP_TRAP =
+          'if (--window.LoopTrap == 0) throw "Infinite loop.";\n';
+      var code = Blockly.JavaScript.workspaceToCode(workspace);
+      Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+      try {
+        eval(code);
+      } catch (e) {
+        alert(e);
+      }
+    }
+    
+    function removeElementsByClass(className){
+    var elements = document.getElementsByClassName(className);
+    while(elements.length > 0){
+        elements[0].parentNode.removeChild(elements[0]);
+    }
+}
+    
+  </script>
+    </body>
+</html>
